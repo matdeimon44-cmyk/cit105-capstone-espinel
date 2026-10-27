@@ -1,7 +1,6 @@
 import streamlit as st
-import json
-from pathlib import Path
 from datetime import date
+from database import initialize_database, load_sessions, save_sessions
 
 st.set_page_config(
     page_title="Baseball Training Tracker",
@@ -9,21 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-DATA_FILE = Path(__file__).parent / "training_data.json"
-
-
-def load_sessions():
-    if DATA_FILE.exists():
-        with open(DATA_FILE, "r", encoding="utf-8") as file:
-            return json.load(file)
-    return []
-
-
-def save_sessions(sessions):
-    with open(DATA_FILE, "w", encoding="utf-8") as file:
-        json.dump(sessions, file, indent=4)
-
-
+initialize_database()
 sessions = load_sessions()
 
 st.title("⚾ Baseball Training Tracker")
@@ -40,7 +25,9 @@ if page == "Add Training":
     st.header("Add a New Training Session")
 
     with st.form("training_form"):
-        training_date = st.date_input("Training Date", date.today())
+        training_date = st.date_input(
+            "Training Date", date.today()
+        )
 
         training_type = st.selectbox(
             "Training Type",
@@ -61,7 +48,7 @@ if page == "Add Training":
             new_session = {
                 "date": str(training_date),
                 "type": training_type,
-                "duration": duration,
+                "duration": int(duration),
                 "notes": notes
             }
 
@@ -75,7 +62,10 @@ elif page == "Training History":
     if sessions:
         selected_type = st.selectbox(
             "Filter by Training Type",
-            ["All", "Hitting", "Fielding", "Throwing", "Conditioning"]
+            [
+                "All", "Hitting", "Fielding",
+                "Throwing", "Conditioning"
+            ]
         )
 
         filtered_sessions = sessions
@@ -107,10 +97,16 @@ elif page == "Summary":
     col1, col2 = st.columns(2)
 
     with col1:
-        st.metric("Total Training Sessions", total_sessions)
+        st.metric(
+            "Total Training Sessions",
+            total_sessions
+        )
 
     with col2:
-        st.metric("Total Training Minutes", total_minutes)
+        st.metric(
+            "Total Training Minutes",
+            total_minutes
+        )
 
     if sessions:
         st.subheader("Training by Type")

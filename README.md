@@ -76,3 +76,80 @@ The AI training suggestion feature and SQLite database will be developed in a la
 ## Author
 
 Matthew Espinel
+
+## Week 7 Assignment 2 - SQLite Data Layer
+
+### Database Design
+
+The Baseball Training Tracker uses SQLite to store
+baseball training sessions persistently.
+
+The database contains one table named
+`training_sessions`.
+
+### Table Structure
+
+- id: Unique identifier and primary key.
+- training_date: Date of the training session.
+- training_type: Hitting, Fielding, Throwing,
+  or Conditioning.
+- duration: Training duration in minutes.
+- notes: Additional performance notes.
+
+### Database Constraints
+
+The database includes the following constraints:
+
+- PRIMARY KEY ensures each session has a unique ID.
+- NOT NULL prevents required fields from being empty.
+- CHECK restricts training types to valid categories.
+- CHECK ensures training duration is greater than zero.
+
+### Why This Table Exists
+
+The training_sessions table stores the information
+needed to display training history, filter sessions
+by type, and calculate training summaries.
+
+### SQLite Implementation
+
+The application uses Python's sqlite3 module.
+
+The database.py file manages database connections,
+creates the table, migrates existing JSON records,
+and performs database operations.
+
+SQL INSERT statements use parameterized queries
+to help prevent SQL injection.
+
+### JSON Migration
+
+The original training_data.json file was preserved
+as a backup.
+
+Existing training sessions were migrated into
+training.db without losing the original data.
+
+### Testing
+
+The application was tested by adding a new
+training session and checking Training History.
+
+The existing session and the new session were
+both displayed successfully.
+
+After refreshing the application, both records
+remained available.
+
+### Application Features
+
+- Add baseball training sessions.
+- View training history.
+- Filter sessions by training type.
+- Display total sessions and training minutes.
+- View a chart of training sessions by type.
+
+### Author
+
+Matthew Espinel
+CIT-105 - Week 7 Assignment 2
